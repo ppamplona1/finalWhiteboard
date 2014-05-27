@@ -16,7 +16,7 @@ import pt.uc.dei.aor.projecto8.whiteboard.websocket.MyWhiteboard;
 
 /**
  *
- * @author Users
+ * @author Users 
  */
 @Named
 @SessionScoped
