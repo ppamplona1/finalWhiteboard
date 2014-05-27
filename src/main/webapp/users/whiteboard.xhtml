@@ -9,6 +9,7 @@
         <title>Facelet Title</title>
     </h:head>
     <h:body>
+        <p:growl/>
         <ui:composition template="/templates/templatefile8.xhtml">
 
             <ui:define name ="content">
@@ -51,20 +52,6 @@
                     <br/>
 
                 </h:form>
-
-                <f:view>
-                    <h:form>
-                        Edit : <input type="checkbox" id="edit" value="Edit"
-                                      checked="true" onchange="disableInputForm()"/>
-
-                </h:form>
-                    <h:form>
-                   
-                    <p:commandLink value="Imprimir" action="#{imageController.saveImage()}"/>
-                </h:form>
-                   
-                </f:view>
-
                 Number of users editing: <label id="npeers"></label>
                 <br/>
                 Number of users who want to abort the whiteboard: <label id="numAbort"></label>
@@ -72,47 +59,57 @@
                 <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/resources/js/websocket.js"></script>
 
 
-                
                 <h:form>
-                    <p:dataTable    paginator="true" rows="10" paginatorPosition="top"
-                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                    rowsPerPageTemplate="5,10,15" selectionMode="single"
-                                    selection="#{imageStory.whiteboard}" rowKey="#{item}" var="item" value="#{imageStory.whiteboardList}">
+                    Edit : <input type="checkbox" id="edit" value="Edit"
+                                  checked="true" onchange="disableInputForm()"/>
+
+                </h:form>
+                <h:form>
+
+                    <h:commandButton id="save" value="Imprimir" onclick="defineImageBinary();"
+                                     action="#{imageController.saveImage()}">
+                    </h:commandButton>
+
+
+
+                    <p:dataTable  id="whites"  paginator="true" rows="10" paginatorPosition="top"
+                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                  rowsPerPageTemplate="5,10,15" selectionMode="single"
+                                  rowKey="#{item}" var="item" value="#{imageController.usersWhiteboard}">
                         <f:facet name="header">
                             Historic of Whiteboards
                         </f:facet>
                         <p:column headerText="Date" sortBy="#{item.imageDateCreator}">
                             <h:outputText value="#{item.imageDateCreator.time}" >
-                            
-                            <f:convertDateTime locale="Europe/Lisbon"/>
+
+                                <f:convertDateTime locale="Europe/Lisbon"/>
                             </h:outputText>
-                            
+
                         </p:column>
 
-                        <p:column style="width:4%;text-align: center" headerText="View">
-
+                        <p:column headerText="View">
 
                             <p:commandLink id="selectButton" oncomplete="PF('image').show();" update=":orlando" value="view" title="View">
                                 <f:setPropertyActionListener value="#{item}" target="#{imageStory.whiteboard}" />
                             </p:commandLink>
                         </p:column>
-                        <p:column style="width:6%" headerText="Delete" >
+                        <p:column headerText="Delete" >
                             <p:commandLink ajax="false" value="Delete" action="#{imageStory.remove(item)}"/>
                         </p:column>
                     </p:dataTable>
                 </h:form>
                 <!--                </f:view>-->
                 <h:form id="orlando">
-                    <p:dialog  id="modalDialog" header="Whiteboard"  widgetVar="image" modal="true" height="auto" width="auto">
+                    <p:dialog rendered="#{imageStory.renderedImage}" id="modalDialog" header="Whiteboard"  widgetVar="image" modal="true" height="auto" width="auto">
                         <p:graphicImage value="#{imageView.image}" cache="false" width="350" height="350">
                             <f:param name="id" value="#{imageStory.whiteboard.whiteboardId}"/>
                         </p:graphicImage>
                     </p:dialog>
                 </h:form>
-                
-                
-                
-                
+
+
+
+
 
 
             </ui:define>

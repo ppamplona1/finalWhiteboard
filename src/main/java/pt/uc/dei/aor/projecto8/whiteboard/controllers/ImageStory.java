@@ -7,7 +7,7 @@ package pt.uc.dei.aor.projecto8.whiteboard.controllers;
 
 import java.io.File;
 import java.util.List;
-import javax.enterprise.context.RequestScoped;
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,22 +25,28 @@ public class ImageStory {
 
     @Inject
     private WhiteboardFacade whiteboardFacade;
-    
-    
+
     @Inject
     private LoggedUser loggedUser;
-    
+
     private Whiteboard whiteboard;
 
     private List<Whiteboard> whiteboardList;
 
+    private boolean renderedImage;
+
     public ImageStory() {
+    }
+
+    @PostConstruct
+    public void init() {
+        this.renderedImage = false;
     }
 
     public void remove(Whiteboard whiteboard) {
         whiteboardFacade.remove(whiteboard);
         setWhiteboardList(whiteboardFacade.getAll(loggedUser.getLoggedUser()));
-       
+
     }
 
     public List<Whiteboard> getWhiteboardList() {
@@ -66,11 +72,20 @@ public class ImageStory {
     }
 
     public void setWhiteboard(Whiteboard whiteboard) {
+
+        if (whiteboard != null) {
+            this.renderedImage = true;
+        }
         this.whiteboard = whiteboard;
     }
-    
-    
-    
+
+    public boolean isRenderedImage() {
+        return renderedImage;
+    }
+
+    public void setRenderedImage(boolean renderedImage) {
+        this.renderedImage = renderedImage;
+    }
 
     public void removeFile(String pathfile) {
         try {
@@ -85,4 +100,3 @@ public class ImageStory {
         }
     }
 }
-

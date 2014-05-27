@@ -17,14 +17,13 @@
 
             <ui:define name ="content">
 
-                                <h:form  >
-                                        <h:inputText value="#{userController.nameUser}"/>
-                                        <h:inputSecret  value="#{userController.passwordUser}"/>
-                                  
-                                            <h:commandButton  value="Register" action="#{userController.insertUser()}"/>
-                                </h:form>   
-                             
-  
+                <h:form  >
+                    <h:inputText value="#{userController.nameUser}"/>
+                    <h:inputSecret  value="#{userController.passwordUser}"/>
+                    <h:commandButton  value="Register" action="#{userController.insertUser()}"/>
+                </h:form>
+
+
             </ui:define>
         </ui:composition>
 

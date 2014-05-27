@@ -11,18 +11,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.inject.Named;
 import pt.uc.dei.aor.projecto8.whiteboard.beans.LoggedUser;
+import pt.uc.dei.aor.projecto8.whiteboard.entities.Whiteboard;
 import pt.uc.dei.aor.projecto8.whiteboard.facades.WhiteboardFacade;
-import pt.uc.dei.aor.projecto8.whiteboard.websocket.MyWhiteboard;
 import sun.misc.BASE64Decoder;
 
 /**
@@ -33,7 +33,6 @@ import sun.misc.BASE64Decoder;
 @ViewScoped
 public class ImageController implements Serializable {
 
-
     @Inject
     private LoggedUser loggedUser;
 
@@ -41,7 +40,13 @@ public class ImageController implements Serializable {
     private WhiteboardFacade whiteboardfacade;
 
     private String dataURL;
-    
+
+    private List<Whiteboard> usersWhiteboard;
+
+    @PostConstruct
+    public void init() {
+        usersWhiteboard = whiteboardfacade.getAll(loggedUser.getLoggedUser());
+    }
 
     public String getDataURL() {
         return dataURL;
@@ -49,6 +54,15 @@ public class ImageController implements Serializable {
 
     public void setDataURL(String dataURL) {
         this.dataURL = dataURL;
+    }
+
+    public List<Whiteboard> getUsersWhiteboard() {
+        usersWhiteboard = whiteboardfacade.getAll(loggedUser.getLoggedUser());
+        return usersWhiteboard;
+    }
+
+    public void setUsersWhiteboard(List<Whiteboard> usersWhiteboard) {
+        this.usersWhiteboard = usersWhiteboard;
     }
 
     public byte[] image() {
@@ -92,12 +106,11 @@ public class ImageController implements Serializable {
     }
 
     public void saveImage() {
-      String name=loggedUser.getLoggedUser().getUsername()+Calendar.getInstance().getTimeInMillis();
-      whiteboardfacade.insertImage(name, loggedUser.getLoggedUser());
-  
-    }
-    
-    
-//   
 
+        whiteboardfacade.insertImage();
+        init();
+
+    }
+
+//
 }
