@@ -9,10 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import pt.uc.dei.aor.projecto8.whiteboard.entities.Users;
+import pt.uc.dei.aor.projecto8.whiteboard.facades.UsersFacade;
 
 /**
  *
@@ -21,10 +24,16 @@ import javax.servlet.http.HttpSession;
 @Named(value = "userController")
 @RequestScoped
 public class UserController {
+    
+    private Users entity;
+    
 
-    /**
-     * Creates a new instance of UserController
-     */
+    private String nameUser;
+    private String passwordUser;
+
+    @Inject
+    private UsersFacade usersFacade;
+
     public UserController() {
     }
 
@@ -57,4 +66,39 @@ public class UserController {
         return destination; // go to destination
     }
 
+    
+      public void insertUser() {
+       
+       usersFacade.newUser(getNameUser(), getPasswordUser());
+
+    }
+
+    /**
+     * @return the nameUser
+     */
+    public String getNameUser() {
+        return nameUser;
+    }
+
+    /**
+     * @param nameUser the nameUser to set
+     */
+    public void setNameUser(String nameUser) {
+        this.nameUser = nameUser;
+    }
+
+    /**
+     * @return the passwordUser
+     */
+    public String getPasswordUser() {
+        return passwordUser;
+    }
+
+    /**
+     * @param passwordUser the passwordUser to set
+     */
+    public void setPasswordUser(String passwordUser) {
+        this.passwordUser = passwordUser;
+    }
+    
 }

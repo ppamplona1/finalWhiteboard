@@ -44,24 +44,21 @@ public class Users implements Serializable {
     public static final String findByUsername = "Users.findByUsername";
 
     private static final long serialVersionUID = 1L;
-     @Id
-    @NotNull
+    
+    @Id
     @Column(name = "userid")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer userid;
-     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    
     @Column(name = "username", unique = true)
     private String username;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+
     @Column(name = "password")
     private String password;
    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usersUsername")
     private List<Whiteboard> whiteboardList;
+    
     @JoinColumn(name = "groups_groupid", referencedColumnName = "groupid")
     @ManyToOne(optional = false)
     private Groups groupsGroupid;
@@ -72,6 +69,12 @@ public class Users implements Serializable {
     public Users(Integer userid) {
         this.userid = userid;
     }
+    
+    public Users(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
 
     public Users(Integer userid, String username, String password) {
         this.userid = userid;

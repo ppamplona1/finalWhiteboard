@@ -48,17 +48,13 @@ public class Groups implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @NotNull
     @Column(name = "groupid")
     private Integer groupid;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+    
+
     @Column(name = "groupname")
     private String groupname;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 255)
+
     @Column(name = "username", unique = true)
     private String username;
 
@@ -73,8 +69,7 @@ public class Groups implements Serializable {
         this.groupid = groupid;
     }
 
-    public Groups(Integer groupid, String groupname, String username) {
-        this.groupid = groupid;
+    public Groups(String groupname, String username) {
         this.groupname = groupname;
         this.username = username;
     }

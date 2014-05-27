@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.SessionContext;
+import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.websocket.OnClose;
@@ -28,7 +29,7 @@ import pt.uc.dei.aor.projecto8.whiteboard.messages.SendingCounter;
  *
  * @author User
  */
-@Stateless
+@Singleton
 //@ServerEndpoint(value = "/whiteboardendpoint", encoders = {FigureEncoder.class}, decoders = {FigureDecoder.class})
 @ServerEndpoint(value = "/whiteboardendpoint")
 public class MyWhiteboard {
@@ -42,7 +43,7 @@ public class MyWhiteboard {
     private static int numEdit = 0;
     private static int numAbort = 0;
     private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
-    private static ByteBuffer bytebuffer = ByteBuffer.allocate(100000);
+    private static ByteBuffer bytebuffer = ByteBuffer.allocate(500000);
     private String userName = "";
     private boolean edit = true;
 
@@ -198,4 +199,7 @@ public class MyWhiteboard {
         MyWhiteboard.bytebuffer = bytebuffer;
     }
 
+    public static ByteBuffer getDataActive() {
+        return bytebuffer;
+    }
 }

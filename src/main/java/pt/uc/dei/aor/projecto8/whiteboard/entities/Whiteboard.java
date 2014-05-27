@@ -6,6 +6,7 @@
 package pt.uc.dei.aor.projecto8.whiteboard.entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -36,28 +37,30 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Whiteboard.findAll", query = "SELECT w FROM Whiteboard w"),
     @NamedQuery(name = "Whiteboard.findByWhiteboardId", query = "SELECT w FROM Whiteboard w WHERE w.whiteboardId = :whiteboardId"),
-    @NamedQuery(name = "Whiteboard.findByName", query = "SELECT w FROM Whiteboard w WHERE w.name = :name")
+    @NamedQuery(name = "Whiteboard.findByName", query = "SELECT w FROM Whiteboard w WHERE w.name = :name"),
+    @NamedQuery(name = "Whiteboard.findByUser", query = "SELECT w FROM Whiteboard w WHERE w.usersUsername = :user")
 })
 public class Whiteboard implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    @NotNull
     @Column(name = "whiteboard_id")
     private Integer whiteboardId;
-    @Size(min = 1, max = 255)
+
     @Column(name = "name")
     private String name;
+    
+    
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(length = 1000000000)
+    @Column(name = "IMAGEDATA",columnDefinition = "LONGBLOB")
     private byte[] imagedata;
 
-    @NotNull
     @Column(name = "imageDateCreator")
     @Temporal(TemporalType.TIMESTAMP)
-    private GregorianCalendar imageDateCreator;
+    private Calendar imageDateCreator;
+    
     @JoinColumn(name = "users_username", referencedColumnName = "username")
     @ManyToOne(optional = false)
     private Users usersUsername;
@@ -99,13 +102,15 @@ public class Whiteboard implements Serializable {
         this.usersUsername = usersUsername;
     }
 
-    public GregorianCalendar getImageDateCreator() {
+    public Calendar getImageDateCreator() {
         return imageDateCreator;
     }
 
-    public void setImageDateCreator(GregorianCalendar imageDateCreator) {
+    public void setImageDateCreator(Calendar imageDateCreator) {
         this.imageDateCreator = imageDateCreator;
     }
+
+ 
 
     @Override
     public int hashCode() {
@@ -143,7 +148,11 @@ public class Whiteboard implements Serializable {
      * @param imagedata the imagedata to set
      */
     public void setImagedata(byte[] imagedata) {
-        this.setImagedata(imagedata);
+       this.imagedata=imagedata;
+    }
+
+    public byte[] getByteimage() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

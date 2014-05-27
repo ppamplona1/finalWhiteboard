@@ -5,11 +5,15 @@
  */
 package pt.uc.dei.aor.projecto8.whiteboard.facades;
 
+import java.util.Calendar;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import pt.uc.dei.aor.projecto8.whiteboard.entities.Users;
 import pt.uc.dei.aor.projecto8.whiteboard.entities.Whiteboard;
+import pt.uc.dei.aor.projecto8.whiteboard.websocket.MyWhiteboard;
 
 /**
  *
@@ -30,14 +34,25 @@ public class WhiteboardFacade extends AbstractFacade<Whiteboard> {
         super(Whiteboard.class);
     }
 
-    public void insertImage(String name, byte[] imagedata, Users user) {
+    public void insertImage(String name, Users user) {
         Whiteboard novo = new Whiteboard();
-        //novo.setName("teste");
-        //novo.setWhiteboardId(12);
-       // novo.setImagedata(imagedata);
-        //novo.setUsersUsername(user);
-        System.out.println(novo.toString());
-        super.create(novo);
+        novo.setName(name);
+        novo.setImageDateCreator(Calendar.getInstance());
+        novo.setImagedata(MyWhiteboard.getDataActive().array());
+        novo.setUsersUsername(user);
+        this.create(novo);
+
+    }
+
+    public List<Whiteboard> getAll(Users user) {
+        Query query = em.createNamedQuery("Whiteboard.findByUser", Whiteboard.class).setParameter("user", user);
+        return query.getResultList();
+    }
+
+    public byte[] getImageByte(Long idWhiteboard) {
+        Whiteboard whiteboard = em.find(Whiteboard.class, idWhiteboard);
+        return whiteboard.getImagedata();
+    
     }
 
     public EntityManager getEm() {

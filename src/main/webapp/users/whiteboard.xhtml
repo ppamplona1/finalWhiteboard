@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Facelet Title</title>
     </h:head>
@@ -56,13 +57,12 @@
                         Edit : <input type="checkbox" id="edit" value="Edit"
                                       checked="true" onchange="disableInputForm()"/>
 
-                        <h:commandLink value="Imprimir" action="#{canvasController.test()}"/>
-                </form>
-                   <h:form id="form">
-                        <h:inputHidden id="hidden" value="#{canvasController.dataURL}" />
-                        <h:commandButton value="Submit"   onclick="getHidden()" action="#{canvasController.submit}"/>                    
-                 
-                    </h:form>
+                </h:form>
+                    <h:form>
+                   
+                    <p:commandLink value="Imprimir" action="#{imageController.saveImage()}"/>
+                </h:form>
+                   
                 </f:view>
 
                 Number of users editing: <label id="npeers"></label>
@@ -72,6 +72,47 @@
                 <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/resources/js/websocket.js"></script>
 
 
+                
+                <h:form>
+                    <p:dataTable    paginator="true" rows="10" paginatorPosition="top"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rowsPerPageTemplate="5,10,15" selectionMode="single"
+                                    selection="#{imageStory.whiteboard}" rowKey="#{item}" var="item" value="#{imageStory.whiteboardList}">
+                        <f:facet name="header">
+                            Historic of Whiteboards
+                        </f:facet>
+                        <p:column headerText="Date" sortBy="#{item.imageDateCreator}">
+                            <h:outputText value="#{item.imageDateCreator.time}" >
+                            
+                            <f:convertDateTime locale="Europe/Lisbon"/>
+                            </h:outputText>
+                            
+                        </p:column>
+
+                        <p:column style="width:4%;text-align: center" headerText="View">
+
+
+                            <p:commandLink id="selectButton" oncomplete="PF('image').show();" update=":orlando" value="view" title="View">
+                                <f:setPropertyActionListener value="#{item}" target="#{imageStory.whiteboard}" />
+                            </p:commandLink>
+                        </p:column>
+                        <p:column style="width:6%" headerText="Delete" >
+                            <p:commandLink ajax="false" value="Delete" action="#{imageStory.remove(item)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <!--                </f:view>-->
+                <h:form id="orlando">
+                    <p:dialog  id="modalDialog" header="Whiteboard"  widgetVar="image" modal="true" height="auto" width="auto">
+                        <p:graphicImage value="#{imageView.image}" cache="false" width="350" height="350">
+                            <f:param name="id" value="#{imageStory.whiteboard.whiteboardId}"/>
+                        </p:graphicImage>
+                    </p:dialog>
+                </h:form>
+                
+                
+                
+                
 
 
             </ui:define>
